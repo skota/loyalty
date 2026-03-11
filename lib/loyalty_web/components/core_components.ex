@@ -469,4 +469,43 @@ defmodule LoyaltyWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  # sidebar menu item
+  attr :icon, :string, required: true
+  attr :label, :string, required: true
+  attr :to, :string, required: true
+  attr :current_path, :string, required: true
+
+  def menu_item(assigns) do
+    active = assigns.current_path == assigns.to
+
+    assigns =
+      assigns
+      |> assign(:active, active)
+
+    ~H"""
+      <.link
+        navigate={@to}
+        class={[
+          "flex items-center justify-between rounded-md px-3 py-2 text-sm transition",
+          @active && "bg-white text-gray-900 shadow-sm font-medium",
+          !@active && "text-gray-600 hover:bg-gray-200 hover:text-gray-900"
+        ]}
+      >
+        <div class="flex items-center gap-3">
+          <.icon
+            name={@icon}
+            class={[
+              "w-5 h-5",
+              @active && "text-gray-900",
+              !@active && "text-gray-500"
+            ]}
+          />
+          <span><%= @label %></span>
+        </div>
+      </.link>
+    """
+  end
+
+
 end
