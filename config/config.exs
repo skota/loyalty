@@ -65,6 +65,22 @@ config :tailwind,
     cd: Path.expand("..", __DIR__)
   ]
 
+
+# guardian configuration
+# use mix phx.gen.secret to generate secret_key
+# Note: you want the ttl to be shorter.
+config :loyalty, Loyalty.Guardian,
+  issuer: "loyalty",
+  secret_key: "7wYUXBmZ4QUfb1WMU8AzgzF10/tmTHR2cfBia6Q+5A+nv3zBV81DOUleRzoCC+oR",
+  ttl: {30, :days}
+
+# Auth pipeline configuration
+config :loyalty, Loyalty.AuthAccessPipeline,
+  module: Loyalty.Guardian,
+  error_handler: Loyalty.AuthErrorHandler
+
+
+
 # Configures Elixir's Logger
 config :logger, :default_formatter,
   format: "$time $metadata[$level] $message\n",

@@ -1,13 +1,12 @@
 defmodule LoyaltyWeb.LoyaltyProgramLive.Index do
   use LoyaltyWeb, :live_view
-  alias Loyalty.Rewards
+  alias Loyalty.{Rewards, Accounts}
   alias Loyalty.Rewards.LoyaltyProgram
 
   @impl true
-  def mount(_params, _session, socket) do
-    # {:ok, assign(socket, :current_scope, session["current_scope"])}
-    # TODO: fetch actual user from session
-    current_user = %{name: "user", email: "user@mail.com"}
+  def mount(_params, session, socket) do
+    {user, _token} = Accounts.get_user_by_session_token(session["user_token"])
+    current_user = %{name: user.first_name, email: user.email}
 
     socket = socket
           |> assign(:current_user, current_user)
@@ -143,27 +142,5 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.Index do
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
-
-  # def handle_params(_params, uri, socket) do
-  #   {:noreply, assign(socket, :current_path, uri.path)}
-  # end
-
-
-  # def render(assigns) do
-  #   ~H"""
-  #     <LoyaltyWeb.DashboardLayout.dashboard
-  #       current_path={@current_path}
-  #       current_user={@current_user}
-  #       sidebar_open={@sidebar_open}
-  #     >
-  #       <:inner_content>
-  #         <h1 class="text-2xl font-semibold">Loyalty ProgressParams</h1>
-  #         <!-- page-specific content -->
-  #         <h1> You are on the loyalty programs page </h1>
-  #       </:inner_content>
-  #     </LoyaltyWeb.DashboardLayout.dashboard>
-  #   """
-  # end
-
 
 end

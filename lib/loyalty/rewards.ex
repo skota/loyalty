@@ -7,7 +7,7 @@ defmodule Loyalty.Rewards do
   alias Loyalty.Repo
   alias Loyalty.Rewards
 
-  alias Loyalty.Rewards.{LoyaltyPointTransaction,
+  alias Loyalty.Rewards.{LoyaltyPointsTransaction,
               Reward, Purchase, Customer,
               LoyaltyProgram, CustomerLoyaltyProgram}
 
@@ -167,8 +167,8 @@ defmodule Loyalty.Rewards do
   end
 
   def insert_loyalty_points_changeset(attrs) do
-    %LoyaltyPointTransaction{}
-    |> LoyaltyPointTransaction.changeset(attrs)
+    %LoyaltyPointsTransaction{}
+    |> LoyaltyPointsTransaction.changeset(attrs)
   end
 
   def redeem_loyalty_points(reward_params) do

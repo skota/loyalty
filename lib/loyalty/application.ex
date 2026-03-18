@@ -7,6 +7,12 @@ defmodule Loyalty.Application do
 
   @impl true
   def start(_type, _args) do
+    # credentials ="GOOGLE_APPLICATION_CREDENTIALS_JSON"
+    #   |> System.get_env()
+    #   |> File.read!()
+    #   |> Jason.decode!()
+
+    # source = {:service_account, credentials}
     children = [
       LoyaltyWeb.Telemetry,
       Loyalty.Repo,
@@ -15,7 +21,8 @@ defmodule Loyalty.Application do
       # Start a worker by calling: Loyalty.Worker.start_link(arg)
       # {Loyalty.Worker, arg},
       # Start to serve requests, typically the last entry
-      LoyaltyWeb.Endpoint
+      LoyaltyWeb.Endpoint,
+      # {Goth, name: Loyalty.Goth, source: source}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

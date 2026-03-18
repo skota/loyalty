@@ -1,11 +1,12 @@
 defmodule LoyaltyWeb.RewardLive.Index do
   use LoyaltyWeb, :live_view
-  alias Loyalty.Rewards
+  alias Loyalty.{Rewards, Accounts}
   alias Loyalty.Rewards.Reward
 
   @impl true
-  def mount(%{"id" => loyalty_program_id}, _session, socket) do
-    current_user = %{name: "user", email: "user@mail.com"}
+  def mount(%{"id" => loyalty_program_id}, session, socket) do
+    {user, _token} = Accounts.get_user_by_session_token(session["user_token"])
+    current_user = %{name: user.first_name, email: user.email}
     loyalty_program = Rewards.get_loyalty_program(loyalty_program_id)
     rewards = Rewards.list_rewards(loyalty_program_id)
 

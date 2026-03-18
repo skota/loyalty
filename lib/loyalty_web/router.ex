@@ -17,15 +17,37 @@ defmodule LoyaltyWeb.Router do
     plug :accepts, ["json"]
   end
 
+  # Use this pipeline to verify app requests containing api keys
+  # x-header-* not bearer tokens
+  pipeline :api_key_authenticated do
+    plug :accepts, ["json"]
+    plug LoyaltyWeb.VerifyApiKeyPipeline
+  end
+
+  # api roures for mobile. :api_key_authenticated
+  scope "/api/v1", LoyaltyWeb, as: :api_key_authenticated do
+    pipe_through [:api, :api_key_authenticated]
+
+    post "/join", Api.V1.LoyaltyController, :join_loyalty
+    post "/leave", Api.V1.LoyaltyController, :leave_loyalty
+    get "/purchases/:device_id", Api.V1.PurchaseController, :fetch
+
+    post "/device-token", Api.V1.DeviceTokenController, :create
+
+    get "/customer/:device_id", Api.V1.CustomerController, :fetch
+    post "/purchase", Api.V1.PurchaseController, :create
+    # new
+    post "/redeem/reward", Api.V1.PointsController, :redeem
+    get "/rewards/:device_id", Api.V1.PointsController, :fetch
+    get "/reward_details/:device_id/:reward_id", Api.V1.PointsController, :reward_details
+
+  end
+
+
   scope "/", LoyaltyWeb do
     pipe_through :browser
     get "/", PageController, :home
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", LoyaltyWeb do
-  #   pipe_through :api
-  # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:loyalty, :dev_routes) do

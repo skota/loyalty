@@ -1,4 +1,4 @@
-defmodule Loyalty.Rewards.LoyaltyPointTransaction do
+defmodule Loyalty.Rewards.LoyaltyPointsTransaction do
   use Ecto.Schema
   import Ecto.Changeset
 

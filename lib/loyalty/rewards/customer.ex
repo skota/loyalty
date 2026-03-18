@@ -14,21 +14,21 @@ defmodule Loyalty.Rewards.Customer do
     timestamps()
   end
 
-  def changeset(contact, attrs) do
-    contact
+  def changeset(customer, attrs) do
+    customer
     |> cast(attrs, [:phone, :name, :source, :meta, :email, :device_id, :points_balance])
     |> validate_required([:device_id])
     |> unique_constraint(:device_id)
   end
 
-  def update_changeset(contact, attrs) do
-    contact
+  def update_changeset(customer, attrs) do
+    customer
     |> cast(attrs, [:phone, :name, :source, :meta, :email, :device_id, :points_balance])
     |> validate_required([:device_id])
   end
 
-  def update_device_token_changeset(contact, attrs) do
-    contact
+  def update_device_token_changeset(customer, attrs) do
+    customer
     |> cast(attrs, [:device_token])
     |> validate_required([:device_token])
   end

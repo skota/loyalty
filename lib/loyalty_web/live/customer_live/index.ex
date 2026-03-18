@@ -1,11 +1,25 @@
 defmodule LoyaltyWeb.CustomerLive.Index do
   use LoyaltyWeb, :live_view
+  alias Loyalty.Accounts
+
+   @impl true
+   def mount(_params, session, socket) do
+     {user, _token} = Accounts.get_user_by_session_token(session["user_token"])
+     current_user = %{name: user.first_name, email: user.email}
+
+     socket = socket
+           |> assign(:current_user, current_user)
+           |> assign(:current_path, "/customers")
+           |> assign(:sidebar_open, false)
+
+     {:ok, socket}
+   end
 
 
-  def mount(_params, _session, socket) do
-    # {:ok, assign(socket, :current_scope, session["current_scope"])}
-    # TODO: fetch actual user from session
-    current_user = %{name: "user", email: "user@mail.com"}
+  def mount(_params, session, socket) do
+    {user, _token} = Accounts.get_user_by_session_token(session["user_token"])
+    current_user = %{name: user.first_name, email: user.email}
+
 
     socket = socket
           |> assign(:current_user, current_user)
