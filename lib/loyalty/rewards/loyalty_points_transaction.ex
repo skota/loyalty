@@ -14,8 +14,6 @@ defmodule Loyalty.Rewards.LoyaltyPointsTransaction do
   def changeset(loyalty_point, attrs) do
     loyalty_point
     |> cast(attrs, [:points, :source, :notes, :customer_id, :loyalty_program_id, :inserted_at])
-    |> validate_required([:points, :source,  :customer_id, :loyalty_program_id, :inserted_at])
+    |> validate_required([:points, :source, :customer_id, :loyalty_program_id, :inserted_at])
   end
-
-
 end

@@ -8,7 +8,7 @@ defmodule LoyaltyWeb.DashboardLayout do
 
   def dashboard(assigns) do
     ~H"""
-      <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-gray-100">
       <!-- Mobile top bar -->
       <div class="md:hidden flex items-center justify-between bg-white px-4 py-3 border-b">
         <span class="font-semibold text-gray-900">Dashboard</span>
@@ -31,22 +31,46 @@ defmodule LoyaltyWeb.DashboardLayout do
         />
 
         <!-- Sidebar -->
-        <aside
-          class={[
-            "fixed md:fixed inset-y-0 left-0 z-40 w-64 h-screen bg-gray-100 border-r flex flex-col",
-            "transform transition-transform duration-200",
-            @sidebar_open && "translate-x-0",
-            !@sidebar_open && "-translate-x-full",
-            "md:static md:translate-x-0"
-          ]}
-        >
+        <aside class={[
+          "fixed md:fixed inset-y-0 left-0 z-40 w-64 h-screen bg-gray-100 border-r flex flex-col",
+          "transform transition-transform duration-200",
+          @sidebar_open && "translate-x-0",
+          !@sidebar_open && "-translate-x-full",
+          "md:static md:translate-x-0"
+        ]}>
           <!-- Navigation (takes remaining space) -->
           <nav class="flex-1 overflow-y-auto p-4 space-y-1 pb-10">
-            <.menu_item icon="hero-home" label="Dashboard" to="/dashboard" current_path={@current_path} />
-            <.menu_item icon="hero-credit-card" label="Loyalty program" to="/loyalty_programs" current_path={@current_path} />
-            <.menu_item icon="hero-user" label="Customer" to="/customers" current_path={@current_path} />
+            <.menu_item
+              icon="hero-home"
+              label="Dashboard"
+              to="/dashboard"
+              current_path={@current_path}
+            />
+            <.menu_item
+              icon="hero-credit-card"
+              label="Loyalty program"
+              to="/loyalty_programs"
+              current_path={@current_path}
+            />
+            <.menu_item
+              icon="hero-user"
+              label="Customer"
+              to="/customers"
+              current_path={@current_path}
+            />
+            <.menu_item
+              icon="hero-chat-bubble-left-right"
+              label="Surveys"
+              to="/surveys"
+              current_path={@current_path}
+            />
             <.menu_item icon="hero-gift" label="Promos" to="/promos" current_path={@current_path} />
-            <.menu_item icon="hero-chart-bar" label="Analytics" to="/analytics" current_path={@current_path} />
+            <.menu_item
+              icon="hero-chart-bar"
+              label="Analytics"
+              to="/analytics"
+              current_path={@current_path}
+            />
           </nav>
 
           <!-- Footer (always bottom, visually separated) -->
@@ -54,7 +78,7 @@ defmodule LoyaltyWeb.DashboardLayout do
           <div class="mt-6 p-4 border-t text-sm text-grey-900">
             <div class="flex flex-col gap-3">
               <span class="truncate">
-                <%= @current_user && @current_user.email || "" %>
+                {(@current_user && @current_user.email) || ""}
               </span>
 
               <.link
@@ -71,7 +95,7 @@ defmodule LoyaltyWeb.DashboardLayout do
 
         <!-- Main content -->
         <main class="flex-1 bg-white p-4 md:p-6  border border-slate-200">
-          <%= render_slot(@inner_content) %>
+          {render_slot(@inner_content)}
         </main>
       </div>
     </div>

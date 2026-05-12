@@ -12,8 +12,7 @@ defmodule Loyalty.Rewards.Reward do
 
   def changeset(loyalty_program, attrs) do
     loyalty_program
-    |> cast(attrs, [:name, :points_required,  :description, :loyalty_program_id])
-    |> validate_required([:name, :points_required,  :description, :loyalty_program_id])
+    |> cast(attrs, [:name, :points_required, :description, :loyalty_program_id])
+    |> validate_required([:name, :points_required, :description, :loyalty_program_id])
   end
-
 end

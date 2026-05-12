@@ -80,7 +80,6 @@ defmodule Loyalty.Accounts do
     |> Repo.insert()
   end
 
-
   def register_with_email_password(attrs) do
     %User{}
     |> User.register_with_email_and_password_changeset(attrs)
@@ -302,7 +301,6 @@ defmodule Loyalty.Accounts do
     end)
   end
 
-
   # teams and team members
   def create_team_changeset(attrs) do
     %Team{}
@@ -314,8 +312,7 @@ defmodule Loyalty.Accounts do
     |> Team.changeset(attrs)
   end
 
-
-   @doc """
+  @doc """
   Creates team.
   ## Examples
 
@@ -341,30 +338,31 @@ defmodule Loyalty.Accounts do
     |> Repo.update()
   end
 
-
   def get_teams() do
     Repo.all(Team)
   end
 
-
   def get_team_members() do
-    q = from tm in "team_members",
+    q =
+      from tm in "team_members",
         join: u in "users",
+        on: u.id == tm.user_id,
         join: t in "teams",
-        on: u.id == tm.user_id and  t.id == tm.team_id,
+        on: t.id == tm.team_id,
         select: %{
           email: u.email,
           name: u.first_name,
           team_name: t.team_name
         }
 
-      Repo.all(q)
+    Repo.all(q)
   end
 
   def get_teams_select_list() do
-    q = from t in "teams",
+    q =
+      from t in "teams",
         order_by: [asc: t.inserted_at],
-        select: {t.team_name, t.id }
+        select: {t.team_name, t.id}
 
     Repo.all(q)
   end
@@ -383,8 +381,5 @@ defmodule Loyalty.Accounts do
     create_team_member(%{user_id: user_id, team_id: team.id})
     # return team
     team
-
   end
-
-
 end

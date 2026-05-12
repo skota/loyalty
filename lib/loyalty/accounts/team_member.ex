@@ -14,5 +14,4 @@ defmodule Loyalty.Accounts.TeamMember do
     |> cast(attrs, [:user_id, :team_id])
     |> validate_required([:user_id, :team_id])
   end
-
 end

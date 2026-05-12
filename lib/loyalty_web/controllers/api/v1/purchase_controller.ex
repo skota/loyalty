@@ -17,13 +17,13 @@ defmodule LoyaltyWeb.Api.V1.PurchaseController do
     end
   end
 
-
   def fetch(conn, %{"device_id" => device_id}) do
     case Marketing.get_purchase_by_device_id(device_id) do
       {:error, reason} ->
         conn
         |> put_status(:bad_request)
         |> json(%{error: reason})
+
       results ->
         conn
         |> put_status(200)

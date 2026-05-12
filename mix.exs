@@ -52,6 +52,7 @@ defmodule Loyalty.MixProject do
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
+      {:eqrcode, "~> 0.1.0"},
       {:heroicons,
        github: "tailwindlabs/heroicons",
        tag: "v2.2.0",
@@ -68,7 +69,8 @@ defmodule Loyalty.MixProject do
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
       {:goth, "1.4.5"},
-      {:guardian, "~> 2.4"}
+      {:guardian, "~> 2.4"},
+      {:oban, "~> 2.19"}
     ]
   end
 

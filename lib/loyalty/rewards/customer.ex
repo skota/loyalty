@@ -32,6 +32,4 @@ defmodule Loyalty.Rewards.Customer do
     |> cast(attrs, [:device_token])
     |> validate_required([:device_token])
   end
-
-
 end

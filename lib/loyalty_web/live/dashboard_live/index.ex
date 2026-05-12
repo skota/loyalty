@@ -2,15 +2,15 @@ defmodule LoyaltyWeb.DashboardLive.Index do
   use LoyaltyWeb, :live_view
   alias Loyalty.Accounts
 
-
   def mount(_params, session, socket) do
     {user, _token} = Accounts.get_user_by_session_token(session["user_token"])
     current_user = %{name: user.first_name, email: user.email}
 
-    socket = socket
-          |> assign(:current_user, current_user)
-          |> assign(:current_path, "/dashboard")
-          |> assign(:sidebar_open, false)
+    socket =
+      socket
+      |> assign(:current_user, current_user)
+      |> assign(:current_path, "/dashboard")
+      |> assign(:sidebar_open, false)
 
     {:ok, socket}
   end
@@ -23,23 +23,19 @@ defmodule LoyaltyWeb.DashboardLive.Index do
     {:noreply, assign(socket, :sidebar_open, false)}
   end
 
-
-
   def render(assigns) do
     ~H"""
-      <LoyaltyWeb.DashboardLayout.dashboard
-        current_path={@current_path}
-        current_user={@current_user}
-        sidebar_open={@sidebar_open}
-      >
-        <:inner_content>
-          <h1 class="text-2xl font-semibold">Dashboard</h1>
-          <!-- page-specific content -->
-          <h1> You are on the dashboard page </h1>
-        </:inner_content>
-      </LoyaltyWeb.DashboardLayout.dashboard>
+    <LoyaltyWeb.DashboardLayout.dashboard
+      current_path={@current_path}
+      current_user={@current_user}
+      sidebar_open={@sidebar_open}
+    >
+      <:inner_content>
+        <h1 class="text-2xl font-semibold">Dashboard</h1>
+        <!-- page-specific content -->
+        <h1>You are on the dashboard page</h1>
+      </:inner_content>
+    </LoyaltyWeb.DashboardLayout.dashboard>
     """
   end
-
-
 end

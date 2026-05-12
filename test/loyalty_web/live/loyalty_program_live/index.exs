@@ -15,12 +15,13 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
     end
 
     test "displays loyalty program details in table", %{conn: conn} do
-      loyalty_program = loyalty_program_fixture(%{
-        name: "Gold Program",
-        points_per_dollar: Decimal.new("1.5"),
-        signup_bonus_points: 500,
-        active: true
-      })
+      loyalty_program =
+        loyalty_program_fixture(%{
+          name: "Gold Program",
+          points_per_dollar: Decimal.new("1.5"),
+          signup_bonus_points: 500,
+          active: true
+        })
 
       {:ok, _index_live, html} = live(conn, ~p"/loyalty_programs")
 
@@ -66,9 +67,10 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
     test "displays form fields in new modal", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, ~p"/loyalty_programs")
 
-      html = index_live
-             |> element("button", "Add Loyalty Program")
-             |> render_click()
+      html =
+        index_live
+        |> element("button", "Add Loyalty Program")
+        |> render_click()
 
       assert html =~ "Name"
       assert html =~ "Points per Dollar"
@@ -92,7 +94,8 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
                  signup_bonus_points: "1000",
                  description: "A great program",
                  active: true
-               })
+               }
+             )
              |> render_submit()
 
       html = render(index_live)
@@ -108,15 +111,17 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
       |> element("button", "Add Loyalty Program")
       |> render_click()
 
-      html = index_live
-             |> form("#loyalty_program-form",
-               loyalty_program: %{
-                 name: "",
-                 points_per_dollar: "",
-                 signup_bonus_points: "",
-                 description: ""
-               })
-             |> render_submit()
+      html =
+        index_live
+        |> form("#loyalty_program-form",
+          loyalty_program: %{
+            name: "",
+            points_per_dollar: "",
+            signup_bonus_points: "",
+            description: ""
+          }
+        )
+        |> render_submit()
 
       assert html =~ "can&#39;t be blank"
     end
@@ -128,10 +133,12 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
       |> element("button", "Add Loyalty Program")
       |> render_click()
 
-      html = index_live
-             |> form("#loyalty_program-form",
-               loyalty_program: %{name: ""})
-             |> render_change()
+      html =
+        index_live
+        |> form("#loyalty_program-form",
+          loyalty_program: %{name: ""}
+        )
+        |> render_change()
 
       assert html =~ "can&#39;t be blank"
     end
@@ -143,9 +150,10 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
       |> element("button", "Add Loyalty Program")
       |> render_click()
 
-      html = index_live
-             |> element("button", "Cancel")
-             |> render_click()
+      html =
+        index_live
+        |> element("button", "Cancel")
+        |> render_click()
 
       # refute html =~ "Add Loyalty Program"
       assert html =~ "Loyalty Programs"
@@ -173,27 +181,30 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
       loyalty_program = loyalty_program_fixture(%{name: "Test Program"})
       {:ok, index_live, _html} = live(conn, ~p"/loyalty_programs")
 
-      html = index_live
-             |> element("button", "Edit")
-             |> render_click()
+      html =
+        index_live
+        |> element("button", "Edit")
+        |> render_click()
 
       assert html =~ "Edit Loyalty Program"
       assert html =~ "Test Program"
     end
 
     test "pre-populates form with existing data", %{conn: conn} do
-      loyalty_program = loyalty_program_fixture(%{
-        name: "Existing Program",
-        points_per_dollar: Decimal.new("1.5"),
-        signup_bonus_points: 250,
-        description: "Test description"
-      })
+      loyalty_program =
+        loyalty_program_fixture(%{
+          name: "Existing Program",
+          points_per_dollar: Decimal.new("1.5"),
+          signup_bonus_points: 250,
+          description: "Test description"
+        })
 
       {:ok, index_live, _html} = live(conn, ~p"/loyalty_programs")
 
-      html = index_live
-             |> element("button", "Edit")
-             |> render_click()
+      html =
+        index_live
+        |> element("button", "Edit")
+        |> render_click()
 
       assert html =~ "Existing Program"
       assert html =~ "1.5"
@@ -217,7 +228,8 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
                  signup_bonus_points: "2000",
                  description: "Updated description",
                  active: false
-               })
+               }
+             )
              |> render_submit()
 
       html = render(index_live)
@@ -235,10 +247,12 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
       |> element("button", "Edit")
       |> render_click()
 
-      html = index_live
-             |> form("#loyalty_program-form",
-               loyalty_program: %{name: ""})
-             |> render_submit()
+      html =
+        index_live
+        |> form("#loyalty_program-form",
+          loyalty_program: %{name: ""}
+        )
+        |> render_submit()
 
       assert html =~ "can&#39;t be blank"
     end
@@ -249,9 +263,10 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
       loyalty_program = loyalty_program_fixture(%{name: "To Delete"})
       {:ok, index_live, _html} = live(conn, ~p"/loyalty_programs")
 
-      html = index_live
-             |> element("button", "Delete")
-             |> render_click()
+      html =
+        index_live
+        |> element("button", "Delete")
+        |> render_click()
 
       assert html =~ "Confirm Delete"
       assert html =~ "To Delete"
@@ -265,9 +280,10 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
       |> element("button", "Delete")
       |> render_click()
 
-      html = index_live
-             |> element("button", "No")
-             |> render_click()
+      html =
+        index_live
+        |> element("button", "No")
+        |> render_click()
 
       assert html =~ "Keep Me"
       refute html =~ "Confirm Delete"
@@ -281,9 +297,10 @@ defmodule LoyaltyWeb.LoyaltyProgramLive.IndexTest do
       |> element("button", "Delete")
       |> render_click()
 
-      html = index_live
-             |> element("button", "Yes")
-             |> render_click()
+      html =
+        index_live
+        |> element("button", "Yes")
+        |> render_click()
 
       refute html =~ "Delete Me"
       refute html =~ "Confirm Delete"

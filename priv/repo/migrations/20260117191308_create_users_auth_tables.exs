@@ -17,8 +17,7 @@ defmodule Loyalty.Repo.Migrations.CreateUsersAuthTables do
     end
 
     # inside schema file
-    #field :user_role, Ecto.Enum, values: [admin: 1, team_member: 2]
-
+    # field :user_role, Ecto.Enum, values: [admin: 1, team_member: 2]
 
     create unique_index(:users, [:email])
 

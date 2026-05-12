@@ -14,7 +14,7 @@ defmodule Loyalty.RewardsFixtures do
       attrs
       |> Enum.into(%{
         name: "Test Program #{System.unique_integer([:positive])}",
-        points_per_dollar: Decimal.new("1.0"),
+        points_per_dollar: 1,
         signup_bonus_points: 100,
         description: "Test program description",
         active: true

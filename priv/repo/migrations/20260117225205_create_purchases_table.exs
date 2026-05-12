@@ -1,7 +1,6 @@
 defmodule Loyalty.Repo.Migrations.CreatePurchasesTable do
   use Ecto.Migration
 
-
   def change do
     create table(:purchases) do
       add :customer_id, references(:customers, on_delete: :delete_all)
@@ -14,5 +13,4 @@ defmodule Loyalty.Repo.Migrations.CreatePurchasesTable do
 
     create index(:purchases, [:customer_id])
   end
-
 end

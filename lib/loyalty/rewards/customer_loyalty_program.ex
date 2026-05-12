@@ -13,5 +13,4 @@ defmodule Loyalty.Rewards.CustomerLoyaltyProgram do
     |> cast(attrs, [:customer_id, :loyalty_program_id])
     |> validate_required([:customer_id, :loyalty_program_id])
   end
-
 end

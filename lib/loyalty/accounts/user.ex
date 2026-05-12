@@ -6,7 +6,7 @@ defmodule Loyalty.Accounts.User do
     field :email, :string
     field :first_name, :string
     field :last_name, :string
-    field :user_role, Ecto.Enum, values: [ admin: 1, team_member: 2], default: :team_member
+    field :user_role, Ecto.Enum, values: [admin: 1, team_member: 2], default: :team_member
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
@@ -32,7 +32,6 @@ defmodule Loyalty.Accounts.User do
     |> validate_email(opts)
   end
 
-
   @spec register_with_email_and_password_changeset(
           {map(),
            %{
@@ -48,10 +47,10 @@ defmodule Loyalty.Accounts.User do
           :invalid | %{optional(:__struct__) => none(), optional(atom() | binary()) => any()}
         ) :: Ecto.Changeset.t()
   def register_with_email_and_password_changeset(user, attrs, opts \\ []) do
-       user
-        |> cast(attrs, [:email, :password, :first_name, :last_name, :user_role])
-        |> validate_email(opts)
-        |> validate_password(opts)
+    user
+    |> cast(attrs, [:email, :password, :first_name, :last_name, :user_role])
+    |> validate_email(opts)
+    |> validate_password(opts)
   end
 
   defp validate_email(changeset, opts) do
@@ -119,7 +118,8 @@ defmodule Loyalty.Accounts.User do
     password = get_change(changeset, :password)
 
     if hash_password? && password && changeset.valid? do
-      IO.inspect "password is valid"
+      IO.inspect("password is valid")
+
       changeset
       # If using Bcrypt, then further validate it is at most 72 bytes long
       |> validate_length(:password, max: 72, count: :bytes)

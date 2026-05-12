@@ -21,28 +21,29 @@ defmodule LoyaltyWeb.Router do
   # x-header-* not bearer tokens
   pipeline :api_key_authenticated do
     plug :accepts, ["json"]
-    plug LoyaltyWeb.VerifyApiKeyPipeline
+    plug Loyalty.VerifyApiKeyPipeline
   end
 
-  # api roures for mobile. :api_key_authenticated
+  # api routes for mobile. :api_key_authenticated
   scope "/api/v1", LoyaltyWeb, as: :api_key_authenticated do
     pipe_through [:api, :api_key_authenticated]
 
     post "/join", Api.V1.LoyaltyController, :join_loyalty
     post "/leave", Api.V1.LoyaltyController, :leave_loyalty
+    get "/loyalty_programs/:device_id", Api.V1.LoyaltyController, :index
     get "/purchases/:device_id", Api.V1.PurchaseController, :fetch
 
     post "/device-token", Api.V1.DeviceTokenController, :create
 
     get "/customer/:device_id", Api.V1.CustomerController, :fetch
     post "/purchase", Api.V1.PurchaseController, :create
+    get "/surveys/:device_id", Api.V1.SurveyController, :index
+    post "/surveys/respond", Api.V1.SurveyController, :create_response
     # new
     post "/redeem/reward", Api.V1.PointsController, :redeem
     get "/rewards/:device_id", Api.V1.PointsController, :fetch
     get "/reward_details/:device_id/:reward_id", Api.V1.PointsController, :reward_details
-
   end
-
 
   scope "/", LoyaltyWeb do
     pipe_through :browser
@@ -80,7 +81,10 @@ defmodule LoyaltyWeb.Router do
       live "/analytics", AnalyticsLive.Index
       live "/customers", CustomerLive.Index
       live "/loyalty_programs", LoyaltyProgramLive.Index
+      live "/loyalty_programs/:id/qr", LoyaltyProgramLive.QR, :show
       live "/loyalty_programs/:id/rewards", RewardLive.Index, :index
+      live "/surveys", SurveyLive.Index, :index
+      live "/surveys/:id/responses", SurveyLive.Responses, :show
       live "/promos", PromoLive.Index
     end
 
@@ -93,7 +97,7 @@ defmodule LoyaltyWeb.Router do
     live_session :current_user,
       on_mount: [{LoyaltyWeb.UserAuth, :mount_current_scope}] do
       live "/users/register", UserLive.Registration, :new
-      live "/users/log-in", UserLive.Login , :new
+      live "/users/log-in", UserLive.Login, :new
       live "/users/log-in/:token", UserLive.Confirmation, :new
     end
 

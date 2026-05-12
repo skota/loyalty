@@ -411,7 +411,7 @@ defmodule LoyaltyWeb.CoreComponents do
       <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
   """
   attr :name, :string, required: true
-  attr :class, :string, default: "size-4"
+  attr :class, :any, default: "size-4"
 
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
@@ -484,28 +484,26 @@ defmodule LoyaltyWeb.CoreComponents do
       |> assign(:active, active)
 
     ~H"""
-      <.link
-        navigate={@to}
-        class={[
-          "flex items-center justify-between rounded-md px-3 py-2 text-sm transition",
-          @active && "bg-white text-gray-900 shadow-sm font-medium",
-          !@active && "text-gray-600 hover:bg-gray-200 hover:text-gray-900"
-        ]}
-      >
-        <div class="flex items-center gap-3">
-          <.icon
-            name={@icon}
-            class={[
-              "w-5 h-5",
-              @active && "text-gray-900",
-              !@active && "text-gray-500"
-            ]}
-          />
-          <span><%= @label %></span>
-        </div>
-      </.link>
+    <.link
+      navigate={@to}
+      class={[
+        "flex items-center justify-between rounded-md px-3 py-2 text-sm transition",
+        @active && "bg-white text-gray-900 shadow-sm font-medium",
+        !@active && "text-gray-600 hover:bg-gray-200 hover:text-gray-900"
+      ]}
+    >
+      <div class="flex items-center gap-3">
+        <.icon
+          name={@icon}
+          class={[
+            "w-5 h-5",
+            @active && "text-gray-900",
+            !@active && "text-gray-500"
+          ]}
+        />
+        <span>{@label}</span>
+      </div>
+    </.link>
     """
   end
-
-
 end

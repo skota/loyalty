@@ -14,5 +14,4 @@ defmodule Loyalty.Accounts.Team do
     |> cast(attrs, [:team_name, :onboarded])
     |> unique_constraint([:team_name])
   end
-
 end

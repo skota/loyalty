@@ -4,7 +4,8 @@ defmodule Loyalty.Repo.Migrations.CreateCustomersTable do
   def change do
     create table(:customers) do
       add :phone, :string, null: true
-      add :source, :string # "qr", "manual", "text-in"
+      # "qr", "manual", "text-in"
+      add :source, :string
       add :meta, :map, default: %{}
       add :name, :string
       add :device_id, :uuid, null: false
@@ -13,6 +14,5 @@ defmodule Loyalty.Repo.Migrations.CreateCustomersTable do
       add :device_token, :string
       timestamps()
     end
-
   end
 end

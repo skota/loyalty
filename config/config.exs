@@ -24,6 +24,16 @@ config :loyalty,
   ecto_repos: [Loyalty.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+config :loyalty, Oban,
+  repo: Loyalty.Repo,
+  queues: [survey_scheduler: 5, survey_delivery: 10],
+  plugins: [
+    {Oban.Plugins.Cron,
+     crontab: [
+       {"@daily", Loyalty.Surveys.Workers.ScheduleSurveyRecipientsWorker}
+     ]}
+  ]
+
 # Configures the endpoint
 config :loyalty, LoyaltyWeb.Endpoint,
   url: [host: "localhost"],
@@ -65,7 +75,6 @@ config :tailwind,
     cd: Path.expand("..", __DIR__)
   ]
 
-
 # guardian configuration
 # use mix phx.gen.secret to generate secret_key
 # Note: you want the ttl to be shorter.
@@ -78,8 +87,6 @@ config :loyalty, Loyalty.Guardian,
 config :loyalty, Loyalty.AuthAccessPipeline,
   module: Loyalty.Guardian,
   error_handler: Loyalty.AuthErrorHandler
-
-
 
 # Configures Elixir's Logger
 config :logger, :default_formatter,
