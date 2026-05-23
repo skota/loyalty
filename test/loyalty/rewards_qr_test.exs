@@ -10,7 +10,7 @@ defmodule Loyalty.RewardsQrTest do
     {:ok, loyalty_program} =
       Rewards.create_loyalty_program(%{
         name: "QR Ready Program",
-        points_per_dollar: Decimal.new("2.5"),
+        points_per_dollar: 2,
         signup_bonus_points: 250,
         description: "Program with qr code",
         active: true

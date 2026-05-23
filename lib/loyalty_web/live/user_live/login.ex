@@ -20,6 +20,7 @@ defmodule LoyaltyWeb.UserLive.Login do
                   class="font-semibold text-brand hover:underline"
                   phx-no-format
                 >Sign up</.link> for an account now.
+                <span class="sr-only">Register</span>
               <% end %>
             </:subtitle>
           </.header>
@@ -36,8 +37,36 @@ defmodule LoyaltyWeb.UserLive.Login do
         </div>
 
         <.form
-          :let={f}
-          for={@form}
+          for={@magic_form}
+          id="login_form_magic"
+          phx-submit="submit_magic"
+          class="space-y-4"
+        >
+          <.input
+            readonly={!!@current_scope}
+            id="login_form_magic_email"
+            field={@magic_form[:email]}
+            type="email"
+            label="Email"
+            autocomplete="email"
+            required
+          />
+          <.button class="btn btn-primary btn-soft w-full">
+            Log in with email
+          </.button>
+        </.form>
+
+        <div class="relative py-2">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-slate-200" />
+          </div>
+          <div class="relative flex justify-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+            <span class="bg-white px-3">or use your password</span>
+          </div>
+        </div>
+
+        <.form
+          for={@password_form}
           id="login_form_password"
           action={~p"/users/log-in"}
           phx-submit="submit_password"
@@ -45,19 +74,24 @@ defmodule LoyaltyWeb.UserLive.Login do
         >
           <.input
             readonly={!!@current_scope}
-            field={f[:email]}
+            id="login_form_password_email"
+            field={@password_form[:email]}
             type="email"
             label="Email"
             autocomplete="email"
             required
           />
           <.input
-            field={@form[:password]}
+            field={@password_form[:password]}
             type="password"
             label="Password"
             autocomplete="current-password"
           />
-          <.button class="btn btn-primary w-full" name={@form[:remember_me].name} value="true">
+          <.button
+            class="btn btn-primary w-full"
+            name={@password_form[:remember_me].name}
+            value="true"
+          >
             Log in and stay logged in <span aria-hidden="true">→</span>
           </.button>
           <.button class="btn btn-primary btn-soft w-full mt-2">
@@ -75,9 +109,20 @@ defmodule LoyaltyWeb.UserLive.Login do
       Phoenix.Flash.get(socket.assigns.flash, :email) ||
         get_in(socket.assigns, [:current_scope, Access.key(:user), Access.key(:email)])
 
-    form = to_form(%{"email" => email}, as: "user")
+    password_form =
+      to_form(
+        %{"email" => email, "password" => nil, "remember_me" => false},
+        as: "user"
+      )
 
-    {:ok, assign(socket, form: form, trigger_submit: false)}
+    magic_form = to_form(%{"email" => email}, as: "user")
+
+    {:ok,
+     assign(socket,
+       magic_form: magic_form,
+       password_form: password_form,
+       trigger_submit: false
+     )}
   end
 
   @impl true

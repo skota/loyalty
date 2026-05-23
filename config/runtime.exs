@@ -22,15 +22,13 @@ end
 
 fb_notification_url =
   System.get_env("FB_NOTIFICATION_URL") ||
-      raise """
-      environment variable FB_NOTIFICATION_URL is missing.
-      """
+    raise """
+    environment variable FB_NOTIFICATION_URL is missing.
+    """
 
-config :loyalty, :fb_notification_url,  fb_notification_url
+config :loyalty, :fb_notification_url, fb_notification_url
 
-
-config :loyalty,:google_credentials,
-    System.fetch_env!("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+config :loyalty, :google_credentials, System.fetch_env!("GOOGLE_APPLICATION_CREDENTIALS_JSON")
 
 if config_env() == :prod do
   database_url =
@@ -41,9 +39,6 @@ if config_env() == :prod do
       """
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
-
-
-
 
   config :loyalty, Loyalty.Repo,
     # ssl: true,

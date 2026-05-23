@@ -10,6 +10,7 @@ defmodule Loyalty.Surveys.Workers.SendSurveyNotificationWorker do
   @impl Oban.Worker
   def perform(%Job{args: %{"survey_recipient_id" => survey_recipient_id}}) do
     recipient = Surveys.get_survey_recipient!(survey_recipient_id)
+    notifications_module = Application.get_env(:loyalty, :notifications_module, Notifications)
 
     cond do
       recipient.status in [:sent, :responded] ->
@@ -20,7 +21,11 @@ defmodule Loyalty.Surveys.Workers.SendSurveyNotificationWorker do
         :ok
 
       true ->
-        case Notifications.send_message(recipient.customer.device_token, recipient.survey.message, recipient.survey_id) do
+        case notifications_module.send_message(
+               recipient.customer.device_token,
+               recipient.survey.message,
+               recipient.survey_id
+             ) do
           {:ok, _response} ->
             {:ok, _recipient} = Surveys.mark_recipient_sent(recipient)
             :ok
@@ -31,6 +36,4 @@ defmodule Loyalty.Surveys.Workers.SendSurveyNotificationWorker do
         end
     end
   end
-
-
 end

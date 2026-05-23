@@ -2,7 +2,6 @@ defmodule LoyaltyWeb.Api.V1.LoyaltyController do
   use LoyaltyWeb, :controller
   alias Loyalty.{Marketing, Notifications}
 
-
   def index(conn, %{"device_id" => device_id}) do
     case Marketing.get_loyalty_membership(device_id) do
       nil ->
@@ -30,6 +29,7 @@ defmodule LoyaltyWeb.Api.V1.LoyaltyController do
       {:ok, _customer_loyalty_program} ->
         customer = Marketing.get_customer_by_device_id(join_params["device_id"])
         Notifications.send_message(customer.device_token, "Successfully joined loyalty program!")
+
         conn
         |> put_status(201)
         |> json(%{ok: "Joined loyalty program"})

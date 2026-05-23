@@ -78,14 +78,12 @@ defmodule LoyaltyWeb.Router do
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
 
       live "/dashboard", DashboardLive.Index
-      live "/analytics", AnalyticsLive.Index
       live "/customers", CustomerLive.Index
       live "/loyalty_programs", LoyaltyProgramLive.Index
       live "/loyalty_programs/:id/qr", LoyaltyProgramLive.QR, :show
       live "/loyalty_programs/:id/rewards", RewardLive.Index, :index
       live "/surveys", SurveyLive.Index, :index
       live "/surveys/:id/responses", SurveyLive.Responses, :show
-      live "/promos", PromoLive.Index
     end
 
     post "/users/update-password", UserSessionController, :update_password

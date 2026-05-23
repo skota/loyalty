@@ -14,6 +14,7 @@ defmodule LoyaltyWeb.Api.V1.SurveyController do
         conn
         |> put_status(:ok)
         |> json(surveys)
+
         # |> json(%{data: surveys})
     end
   end

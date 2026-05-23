@@ -29,8 +29,8 @@ defmodule LoyaltyWeb.DashboardLayout do
           phx-click="close_sidebar"
           class="fixed inset-0 bg-black/30 z-30 md:hidden"
         />
-
-        <!-- Sidebar -->
+        
+    <!-- Sidebar -->
         <aside class={[
           "fixed md:fixed inset-y-0 left-0 z-40 w-64 h-screen bg-gray-100 border-r flex flex-col",
           "transform transition-transform duration-200",
@@ -64,16 +64,9 @@ defmodule LoyaltyWeb.DashboardLayout do
               to="/surveys"
               current_path={@current_path}
             />
-            <.menu_item icon="hero-gift" label="Promos" to="/promos" current_path={@current_path} />
-            <.menu_item
-              icon="hero-chart-bar"
-              label="Analytics"
-              to="/analytics"
-              current_path={@current_path}
-            />
           </nav>
-
-          <!-- Footer (always bottom, visually separated) -->
+          
+    <!-- Footer (always bottom, visually separated) -->
           <!-- Footer -->
           <div class="mt-6 p-4 border-t text-sm text-grey-900">
             <div class="flex flex-col gap-3">
@@ -92,8 +85,8 @@ defmodule LoyaltyWeb.DashboardLayout do
             </div>
           </div>
         </aside>
-
-        <!-- Main content -->
+        
+    <!-- Main content -->
         <main class="flex-1 bg-white p-4 md:p-6  border border-slate-200">
           {render_slot(@inner_content)}
         </main>

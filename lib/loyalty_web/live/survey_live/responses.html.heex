@@ -9,9 +9,11 @@
         <div class="absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.18),_transparent_60%)] lg:block" />
         <div class="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div class="space-y-3">
-            <.link navigate={~p"/surveys"} class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-emerald-700">
-              <.icon name="hero-arrow-left" class="size-4" />
-              Back to Surveys
+            <.link
+              navigate={~p"/surveys"}
+              class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition hover:text-emerald-700"
+            >
+              <.icon name="hero-arrow-left" class="size-4" /> Back to Surveys
             </.link>
             <div class="space-y-2">
               <p class="text-sm font-semibold uppercase tracking-[0.25em] text-emerald-600">
@@ -26,7 +28,9 @@
 
           <div class="rounded-3xl border border-white/70 bg-white/80 px-5 py-4 shadow-sm backdrop-blur">
             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Program</p>
-            <p class="mt-2 text-lg font-semibold text-slate-900">{@survey.loyalty_program.name}</p>
+            <p class="mt-2 text-lg font-semibold text-slate-900">
+              {@survey.loyalty_program.name}
+            </p>
             <p class="mt-1 text-sm text-slate-500">
               Trigger: {@survey.purchase_count_threshold} purchases in {@survey.purchase_window_days} days
             </p>
@@ -41,12 +45,18 @@
           <p class="mt-2 text-sm text-slate-500">Captured submissions tied to this survey.</p>
         </div>
         <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Average Rating</p>
-          <p class="mt-3 text-4xl font-semibold text-slate-900">{:erlang.float_to_binary(@summary.average_rating, decimals: 1)}</p>
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            Average Rating
+          </p>
+          <p class="mt-3 text-4xl font-semibold text-slate-900">
+            {:erlang.float_to_binary(@summary.average_rating, decimals: 1)}
+          </p>
           <p class="mt-2 text-sm text-slate-500">Across the full 1-5 satisfaction scale.</p>
         </div>
         <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Most Common Rating</p>
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            Most Common Rating
+          </p>
           <p class="mt-3 text-4xl font-semibold text-slate-900">{@summary.top_rating}</p>
           <p class="mt-2 text-sm text-slate-500">Highest-volume score in the current data set.</p>
         </div>
@@ -61,10 +71,27 @@
             </div>
           </div>
 
-          <svg viewBox={"0 0 #{@rating_chart.width} #{@rating_chart.height}"} class="h-72 w-full" role="img" aria-label="Rating distribution chart">
-            <line x1="36" y1={@rating_chart.base_y} x2="592" y2={@rating_chart.base_y} stroke="#cbd5e1" stroke-width="2" />
+          <svg
+            viewBox={"0 0 #{@rating_chart.width} #{@rating_chart.height}"}
+            class="h-72 w-full"
+            role="img"
+            aria-label="Rating distribution chart"
+          >
+            <line
+              x1="36"
+              y1={@rating_chart.base_y}
+              x2="592"
+              y2={@rating_chart.base_y}
+              stroke="#cbd5e1"
+              stroke-width="2"
+            />
             <%= for bar <- @rating_chart.bars do %>
-              <text x={bar.label_x} y={bar.y - 10} text-anchor="middle" class="fill-slate-500 text-[11px] font-semibold">
+              <text
+                x={bar.label_x}
+                y={bar.y - 10}
+                text-anchor="middle"
+                class="fill-slate-500 text-[11px] font-semibold"
+              >
                 {bar.count}
               </text>
               <rect
@@ -75,7 +102,12 @@
                 rx="20"
                 class="fill-emerald-400"
               />
-              <text x={bar.label_x} y="204" text-anchor="middle" class="fill-slate-600 text-[12px] font-semibold">
+              <text
+                x={bar.label_x}
+                y="204"
+                text-anchor="middle"
+                class="fill-slate-600 text-[12px] font-semibold"
+              >
                 {bar.rating}
               </text>
             <% end %>
@@ -90,8 +122,20 @@
             </div>
           </div>
 
-          <svg viewBox={"0 0 #{@timeline_chart.width} #{@timeline_chart.height}"} class="h-72 w-full" role="img" aria-label="Survey response timeline chart">
-            <line x1="42" y1={@timeline_chart.base_y} x2="586" y2={@timeline_chart.base_y} stroke="#cbd5e1" stroke-width="2" />
+          <svg
+            viewBox={"0 0 #{@timeline_chart.width} #{@timeline_chart.height}"}
+            class="h-72 w-full"
+            role="img"
+            aria-label="Survey response timeline chart"
+          >
+            <line
+              x1="42"
+              y1={@timeline_chart.base_y}
+              x2="586"
+              y2={@timeline_chart.base_y}
+              stroke="#cbd5e1"
+              stroke-width="2"
+            />
             <polyline
               :if={@timeline_chart.points != ""}
               fill="none"
@@ -102,11 +146,27 @@
               points={@timeline_chart.points}
             />
             <%= for label <- @timeline_chart.labels do %>
-              <circle cx={label.x} cy={label.y} r="6" class="fill-emerald-500 stroke-white" stroke-width="3" />
-              <text x={label.x} y={label.y - 14} text-anchor="middle" class="fill-slate-500 text-[11px] font-semibold">
+              <circle
+                cx={label.x}
+                cy={label.y}
+                r="6"
+                class="fill-emerald-500 stroke-white"
+                stroke-width="3"
+              />
+              <text
+                x={label.x}
+                y={label.y - 14}
+                text-anchor="middle"
+                class="fill-slate-500 text-[11px] font-semibold"
+              >
                 {label.count}
               </text>
-              <text x={label.x} y="204" text-anchor="middle" class="fill-slate-600 text-[11px] font-semibold">
+              <text
+                x={label.x}
+                y="204"
+                text-anchor="middle"
+                class="fill-slate-600 text-[11px] font-semibold"
+              >
                 {label.date}
               </text>
             <% end %>
@@ -127,13 +187,19 @@
 
           <div :for={response <- @responses} class="grid gap-4 px-6 py-5 lg:grid-cols-[220px_1fr]">
             <div class="space-y-1">
-              <p class="font-semibold text-slate-900">{response.customer_name || "Anonymous Customer"}</p>
-              <p class="text-sm text-slate-500">{response.customer_email || "No email on file"}</p>
+              <p class="font-semibold text-slate-900">
+                {response.customer_name || "Anonymous Customer"}
+              </p>
+              <p class="text-sm text-slate-500">
+                {response.customer_email || "No email on file"}
+              </p>
               <div class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
                 Rating: {response.rating}/5
               </div>
               <p class="text-xs uppercase tracking-[0.2em] text-slate-400">
-                {if response.submitted_at, do: Calendar.strftime(response.submitted_at, "%b %-d, %Y"), else: "Date unavailable"}
+                {if response.submitted_at,
+                  do: Calendar.strftime(response.submitted_at, "%b %-d, %Y"),
+                  else: "Date unavailable"}
               </p>
             </div>
 

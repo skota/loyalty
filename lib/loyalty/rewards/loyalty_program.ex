@@ -4,7 +4,7 @@ defmodule Loyalty.Rewards.LoyaltyProgram do
 
   schema "loyalty_programs" do
     field :name, :string
-    field :points_per_dollar, :decimal
+    field :points_per_dollar, :integer
     field :signup_bonus_points, :integer
     field :description, :string
     field :active, :boolean, default: true

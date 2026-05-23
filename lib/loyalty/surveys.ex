@@ -100,7 +100,10 @@ defmodule Loyalty.Surveys do
         surveys =
           SurveyRecipient
           |> join(:inner, [recipient], survey in assoc(recipient, :survey))
-          |> where([recipient, survey], recipient.customer_id == ^customer_id and survey.active == true)
+          |> where(
+            [recipient, survey],
+            recipient.customer_id == ^customer_id and survey.active == true
+          )
           |> where([recipient], recipient.status in [:pending, :sent])
           |> order_by([recipient], desc: recipient.inserted_at)
           |> select([recipient, survey], %{
@@ -122,7 +125,8 @@ defmodule Loyalty.Surveys do
         {:error, "customer not found"}
 
       %Customer{} = customer ->
-        with %SurveyRecipient{} = recipient <- get_recipient_for_customer_survey(customer.id, attrs["survey_id"]),
+        with %SurveyRecipient{} = recipient <-
+               get_recipient_for_customer_survey(customer.id, attrs["survey_id"]),
              true <- recipient.customer_id == customer.id do
           create_survey_response(customer, recipient, attrs)
         else
@@ -172,7 +176,7 @@ defmodule Loyalty.Surveys do
   end
 
   def queue_matching_recipients(%Survey{} = survey, now \\ DateTime.utc_now()) do
-    timestamp = DateTime.utc_now() |> DateTime.truncate(:second)
+    timestamp = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 
     recipients =
       survey
@@ -202,7 +206,9 @@ defmodule Loyalty.Surveys do
           )
 
         Enum.each(inserted_recipients, fn recipient ->
-          case Oban.insert(SendSurveyNotificationWorker.new(%{"survey_recipient_id" => recipient.id})) do
+          case Oban.insert(
+                 SendSurveyNotificationWorker.new(%{"survey_recipient_id" => recipient.id})
+               ) do
             {:ok, _job} -> :ok
             {:error, changeset} -> Repo.rollback(changeset)
           end
@@ -247,7 +253,7 @@ defmodule Loyalty.Surveys do
       customer_id: customer.id,
       survey_recipient_id: recipient.id,
       rating: attrs["rating"],
-      additional_feedback: attrs["feedback"],
+      additional_feedback: attrs["additional_feedback"],
       submitted_at: submitted_at
     }
 

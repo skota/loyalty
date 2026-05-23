@@ -15,11 +15,12 @@ defmodule Loyalty.Notifications do
           {"Authorization", "Bearer #{String.trim(token.token)}"}
         ]
 
-        body = if survey_id do
-          message_body(device_token, message, survey_id)
-        else
-          message_body(device_token, message)
-        end
+        body =
+          if survey_id do
+            message_body(device_token, message, survey_id)
+          else
+            message_body(device_token, message)
+          end
 
         {:ok, notifications_url} = Application.fetch_env(:loyalty, :fb_notification_url)
 
@@ -40,14 +41,14 @@ defmodule Loyalty.Notifications do
 
   defp message_body(device_token, message) do
     %{
-          message: %{
-            token: device_token,
-            notification: %{
-              body: message,
-              title: "Loyalty"
-            }
-          }
+      message: %{
+        token: device_token,
+        notification: %{
+          body: message,
+          title: "Loyalty"
         }
+      }
+    }
   end
 
   defp message_body(device_token, message, survey_id) do
@@ -64,5 +65,4 @@ defmodule Loyalty.Notifications do
       }
     }
   end
-
 end

@@ -6,4 +6,8 @@ defmodule Loyalty.NotificationsStub do
 
     {:ok, %{device_token: device_token, message: message}}
   end
+
+  def send_message(device_token, message, _survey_id) do
+    send_message(device_token, message)
+  end
 end

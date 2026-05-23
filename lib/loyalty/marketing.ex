@@ -83,13 +83,20 @@ defmodule Loyalty.Marketing do
     # 1 - find Customer based on device_id and get current points
     customer = get_customer_by_device_id(purchase_params["device_id"])
 
-    cust_loyalty_program = get_loyalty_membership_by_id(purchase_params["cust_loyalty_program_id"])
+    cust_loyalty_program =
+      get_loyalty_membership_by_id(purchase_params["cust_loyalty_program_id"])
+
     loyalty_program = get_loyalty_program(cust_loyalty_program.loyalty_program_id)
 
-    # from loyalty_program get "points_per_dollar" to compute points
+    # points = Decimal.mult(loyalty_program.points_per_dollar, purchase_params["amount"])
+    #   |> Decimal.to_integer()
+
     points =
-      Decimal.mult(loyalty_program.points_per_dollar, purchase_params["amount"])
-      |> Decimal.to_integer()
+      (loyalty_program.points_per_dollar * purchase_params["amount"])
+      # convert to cents
+      |> div(100)
+
+    IO.inspect("Points earned #{points}")
 
     purchase_params = %{
       "customer_id" => customer.id,
@@ -100,21 +107,21 @@ defmodule Loyalty.Marketing do
       "purchased_at" => DateTime.utc_now()
     }
 
-    #redemption will be negative points, so we store as negative in the db and when showing to user we show absolute value of points
+    # redemption will be negative points, so we store as negative in the db and when showing to user we show absolute value of points
     loyalty_point_transaction = %{
       "loyalty_program_id" => loyalty_program.id,
       "customer_id" => customer.id,
-      "points" => (trunc(points / 100) * -1),
+      "points" => points,
       "source" => "purchase",
       "notes" => "points for purchase of #{purchase_params["items"]}",
       "inserted_at" => DateTime.utc_now()
     }
 
-    IO.inspect("Existing balance: #{customer.points_balance}, new points: #{points / 100}")
+    IO.inspect("Existing balance: #{customer.points_balance}, new points: #{points}")
     # 1 - update Customer balance - update_Customer_changeset  -> new func that returns changeset
     # 2 - insert purchase
     # 3 - add loyalty_points_transaction
-    points_balance = (customer.points_balance + points / 100) |> round()
+    points_balance = (customer.points_balance + points) |> round()
     IO.inspect("points balance: #{points_balance}")
 
     multi =
@@ -138,15 +145,18 @@ defmodule Loyalty.Marketing do
          insert: _purchase,
          loyalty_points_transaction: loyalty_points_transaction
        }} ->
-        IO.inspect loyalty_points_transaction\
+        IO.inspect(loyalty_points_transaction)
+
         # send push notification to user about points earned
         device_token = customer.device_token
+
         Task.async(fn ->
           Notifications.send_message(
             device_token,
             "You earned #{points / 100} points for your purchase of #{purchase_params["product_name"]}. Your new balance is #{points_balance} points."
           )
         end)
+
         {:ok, "success"}
 
       {:error, :customer, changeset, _} ->
@@ -175,12 +185,15 @@ defmodule Loyalty.Marketing do
     reward = get_reward!(reward_params["reward_id"])
 
     loyalty_program =
-      get_customer_loyalty_program_by(reward_params["loyalty_program_id"], reward_params["customer_id"])
+      get_customer_loyalty_program_by(
+        reward_params["loyalty_program_id"],
+        reward_params["customer_id"]
+      )
 
     loyalty_point_transaction = %{
       "loyalty_program_id" => loyalty_program.id,
       "customer_id" => customer.id,
-      "points" => (reward_params["points"] * -1),
+      "points" => reward_params["points"] * -1,
       "source" => "redeem",
       "notes" => "Redeem points for #{reward.name}",
       "inserted_at" => DateTime.utc_now()
@@ -202,9 +215,16 @@ defmodule Loyalty.Marketing do
     result = Repo.transaction(multi)
 
     case result do
-      {:ok, %{customer_details: customer_details, loyalty_points_transaction: _loyalty_points_transaction}} ->
+      {:ok,
+       %{
+         customer_details: customer_details,
+         loyalty_points_transaction: _loyalty_points_transaction
+       }} ->
         # You redeemed #{reward.name} for #{reward.points_required} points. Your new balance is #{Customer.points_balance}
-        IO.inspect "Customer details: #{inspect(customer_details)}, reward: #{reward.name}, points required: #{reward.points_required}, new balance: #{points_balance}"
+        IO.inspect(
+          "Customer details: #{inspect(customer_details)}, reward: #{reward.name}, points required: #{reward.points_required}, new balance: #{points_balance}"
+        )
+
         device_token = customer_details.device_token
 
         Task.async(fn ->
@@ -311,11 +331,8 @@ defmodule Loyalty.Marketing do
     Repo.get_by(LoyaltyProgram, id: loyalty_program_id)
   end
 
-
-
   def get_loyalty_program_by_qrcode(id) do
-
-    Repo.get_by(LoyaltyProgram, [qr_code_token: id])
+    Repo.get_by(LoyaltyProgram, qr_code_token: id)
   end
 
   def join_loyalty_program(loyalty_program_id, device_id) do
@@ -337,9 +354,8 @@ defmodule Loyalty.Marketing do
         {:ok, "Joined loyalty program"}
 
       {:error, changeset} ->
-
         {:error, "There was an error joining the loyalty program: #{inspect(changeset)} "}
-      end
+    end
 
     # {:ok, "Joined loyalty program"}
   end
@@ -354,7 +370,6 @@ defmodule Loyalty.Marketing do
     {:ok, "Left loyalty program"}
   end
 
-
   # customer loyalty program
   def create_customer_loyalty_program(attrs \\ %{}) do
     %CustomerLoyaltyProgram{}
@@ -363,20 +378,20 @@ defmodule Loyalty.Marketing do
   end
 
   def get_customer_loyalty_program_by(loyalty_program_id, customer_id) do
-    q = from clp in "customer_loyalty_programs",
+    q =
+      from clp in "customer_loyalty_programs",
         join: lp in "loyalty_programs",
         on: lp.id == clp.loyalty_program_id,
         join: c in "customers",
         on: c.id == clp.customer_id,
-      where: clp.loyalty_program_id == ^loyalty_program_id and clp.customer_id == ^customer_id,
-      select: %{
-        id: lp.id,
-        name: lp.name,
-        description: lp.description,
-        points_per_dollar: lp.points_per_dollar,
-        active: true
-      }
-
+        where: clp.loyalty_program_id == ^loyalty_program_id and clp.customer_id == ^customer_id,
+        select: %{
+          id: lp.id,
+          name: lp.name,
+          description: lp.description,
+          points_per_dollar: lp.points_per_dollar,
+          active: true
+        }
 
     Repo.one(q)
   end

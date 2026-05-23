@@ -34,7 +34,10 @@ defmodule Loyalty.Repo.Migrations.CreateSurveys do
     create table(:survey_responses) do
       add :survey_id, references(:surveys, on_delete: :delete_all), null: false
       add :customer_id, references(:customers, on_delete: :delete_all), null: false
-      add :survey_recipient_id, references(:survey_recipients, on_delete: :delete_all), null: false
+
+      add :survey_recipient_id, references(:survey_recipients, on_delete: :delete_all),
+        null: false
+
       add :rating, :integer, null: false
       add :additional_feedback, :text
       add :submitted_at, :utc_datetime, null: false

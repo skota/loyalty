@@ -8,18 +8,19 @@ defmodule Loyalty.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      LoyaltyWeb.Telemetry,
-      Loyalty.Repo,
-      {Oban, Application.fetch_env!(:loyalty, Oban)},
-      {DNSCluster, query: Application.get_env(:loyalty, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: Loyalty.PubSub},
-      # Start a worker by calling: Loyalty.Worker.start_link(arg)
-      # {Loyalty.Worker, arg},
-      # Start to serve requests, typically the last entry
-      LoyaltyWeb.Endpoint
-    ]
-    |> maybe_add_goth()
+    children =
+      [
+        LoyaltyWeb.Telemetry,
+        Loyalty.Repo,
+        {Oban, Application.fetch_env!(:loyalty, Oban)},
+        {DNSCluster, query: Application.get_env(:loyalty, :dns_cluster_query) || :ignore},
+        {Phoenix.PubSub, name: Loyalty.PubSub},
+        # Start a worker by calling: Loyalty.Worker.start_link(arg)
+        # {Loyalty.Worker, arg},
+        # Start to serve requests, typically the last entry
+        LoyaltyWeb.Endpoint
+      ]
+      |> maybe_add_goth()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

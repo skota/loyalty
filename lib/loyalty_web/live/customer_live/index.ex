@@ -59,14 +59,18 @@ defmodule LoyaltyWeb.CustomerLive.Index do
                 <p class="text-sm font-semibold uppercase tracking-[0.25em] text-amber-600">
                   Customer Directory
                 </p>
-                <h1 class="font-serif text-4xl text-slate-900">Keep your customer base searchable, readable, and ready for follow-up.</h1>
+                <h1 class="font-serif text-4xl text-slate-900">
+                  Keep your customer base searchable, readable, and ready for follow-up.
+                </h1>
                 <p class="max-w-xl text-sm leading-6 text-slate-600">
                   Browse the full customer list, spot high-balance members quickly, and filter in real time by name, email, phone, or device id.
                 </p>
               </div>
 
               <div class="rounded-3xl border border-white/70 bg-white/80 px-5 py-4 shadow-sm backdrop-blur">
-                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Visible Customers</p>
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  Visible Customers
+                </p>
                 <p class="mt-2 text-3xl font-semibold text-slate-900">{@customer_count}</p>
                 <p class="mt-1 text-sm text-slate-500">Filtered from the current search.</p>
               </div>
@@ -75,7 +79,9 @@ defmodule LoyaltyWeb.CustomerLive.Index do
 
           <section class="grid gap-4 md:grid-cols-3">
             <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Search Scope</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                Search Scope
+              </p>
               <p class="mt-3 text-2xl font-semibold text-slate-900">Name to device</p>
               <p class="mt-2 text-sm leading-6 text-slate-600">
                 Search checks customer name, email, phone, and device id to make support lookups fast.
@@ -102,7 +108,9 @@ defmodule LoyaltyWeb.CustomerLive.Index do
               <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <div>
                   <h2 class="text-xl font-semibold text-slate-900">Customers</h2>
-                  <p class="text-sm text-slate-500">Search and review your customer records in one place.</p>
+                  <p class="text-sm text-slate-500">
+                    Search and review your customer records in one place.
+                  </p>
                 </div>
 
                 <.form
@@ -135,13 +143,17 @@ defmodule LoyaltyWeb.CustomerLive.Index do
                 <tbody class="divide-y divide-slate-100 bg-white">
                   <tr :if={@customers == []}>
                     <td colspan="5" class="px-6 py-12 text-center text-sm text-slate-500">
-                      {if @search_query == "", do: "No customers found yet.", else: "No customers match your search."}
+                      {if @search_query == "",
+                        do: "No customers found yet.",
+                        else: "No customers match your search."}
                     </td>
                   </tr>
                   <tr :for={customer <- @customers} class="group">
                     <td class="px-6 py-5 align-top">
                       <div class="space-y-1">
-                        <p class="font-semibold text-slate-900">{customer.name || "Unnamed Customer"}</p>
+                        <p class="font-semibold text-slate-900">
+                          {customer.name || "Unnamed Customer"}
+                        </p>
                         <p class="text-sm text-slate-500">
                           Added {Calendar.strftime(customer.inserted_at, "%b %-d, %Y")}
                         </p>

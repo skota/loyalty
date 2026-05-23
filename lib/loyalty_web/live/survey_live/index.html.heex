@@ -12,7 +12,9 @@
             <p class="text-sm font-semibold uppercase tracking-[0.25em] text-orange-600">
               Voice Of Customer
             </p>
-            <h1 class="font-serif text-4xl text-slate-900">Survey campaigns that trigger off real purchase behavior.</h1>
+            <h1 class="font-serif text-4xl text-slate-900">
+              Survey campaigns that trigger off real purchase behavior.
+            </h1>
             <p class="max-w-xl text-sm leading-6 text-slate-600">
               Create a survey once, define the purchase threshold, and let background jobs find the right customers and deliver the push notification automatically.
             </p>
@@ -23,18 +25,18 @@
             phx-click="show_new_modal"
             class="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-orange-500"
           >
-            <.icon name="hero-plus" class="mr-2 size-4" />
-            New Survey
+            <.icon name="hero-plus" class="mr-2 size-4" /> New Survey
           </button>
         </div>
       </section>
 
-    
       <section class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm">
         <div class="flex items-center justify-between border-b border-slate-200 px-6 py-5">
           <div>
             <h2 class="text-xl font-semibold text-slate-900">Surveys</h2>
-            <p class="text-sm text-slate-500">Manage active and draft survey campaigns from one place.</p>
+            <p class="text-sm text-slate-500">
+              Manage active and draft survey campaigns from one place.
+            </p>
           </div>
         </div>
 
@@ -52,7 +54,7 @@
               </tr>
             </thead>
             <tbody id="surveys" phx-update="stream" class="divide-y divide-slate-100">
-              <tr class="hidden only:table-row">
+              <tr id="surveys-empty-state" class="hidden only:table-row">
                 <td colspan="7" class="px-6 py-12 text-center text-sm text-slate-500">
                   No surveys yet. Create your first campaign to start daily targeting.
                 </td>
@@ -144,7 +146,13 @@
               </button>
             </div>
 
-            <.form for={@form} id="survey-form" phx-change="validate" phx-submit="save" class="space-y-5">
+            <.form
+              for={@form}
+              id="survey-form"
+              phx-change="validate"
+              phx-submit="save"
+              class="space-y-5"
+            >
               <div class="grid gap-5 md:grid-cols-2">
                 <.input field={@form[:name]} type="text" label="Survey name" />
                 <.input
@@ -208,7 +216,9 @@
               <div>
                 <h3 class="text-xl font-semibold text-slate-900">Delete survey?</h3>
                 <p class="mt-2 text-sm leading-6 text-slate-500">
-                  This will remove <span class="font-semibold text-slate-700">{@selected_survey.name}</span> and its targeting configuration.
+                  This will remove
+                  <span class="font-semibold text-slate-700">{@selected_survey.name}</span>
+                  and its targeting configuration.
                 </p>
               </div>
               <div class="flex justify-center gap-3 pt-2">
